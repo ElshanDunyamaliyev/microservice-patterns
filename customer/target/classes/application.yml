@@ -1,0 +1,43 @@
+server:
+  port: 9010
+spring:
+  application:
+    name: "customer"
+  datasource:
+    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5732/postgres}"
+    username: postgres
+    password: postgres
+  config:
+    import: "${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8071/}"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "customers"
+    description: "Eazy Bank Customer Application"
+    version: "1.0.0"
+
+logging:
+  pattern:
+    console: "%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n"
