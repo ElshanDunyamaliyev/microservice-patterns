@@ -28,7 +28,9 @@ public class CustomerCommandController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        CreateCustomerCommand createCustomerCommand = CreateCustomerCommand.builder().customerId(UUID.randomUUID().toString()).email(customerDto.getEmail())
+        CreateCustomerCommand createCustomerCommand = CreateCustomerCommand.builder()
+                .customerId(UUID.randomUUID().toString())
+                .email(customerDto.getEmail())
                 .name(customerDto.getName())
                 .mobileNumber(customerDto.getMobileNumber())
                 .activeSw(CustomerConstants.ACTIVE_SW)
@@ -45,6 +47,7 @@ public class CustomerCommandController {
     public ResponseEntity<ResponseDto> updateCustomerDetails(@Valid @RequestBody CustomerDto customerDto) {
         UpdateCustomerCommand updateCustomerCommand = UpdateCustomerCommand.builder().customerId(customerDto.getCustomerId())
                 .name(customerDto.getName())
+                .email(customerDto.getEmail())
                 .mobileNumber(customerDto.getMobileNumber())
                 .activeSw(CustomerConstants.ACTIVE_SW)
                 .build();

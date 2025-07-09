@@ -12,12 +12,15 @@ import com.eazybytes.customer.exception.CustomerAlreadyExistsException;
 import com.eazybytes.customer.repository.CustomerRepository;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventhandling.DomainEventMessage;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Aggregate
@@ -35,9 +38,10 @@ public class CustomerAggregate {
 
     @CommandHandler
     public CustomerAggregate(CreateCustomerCommand command, CustomerRepository customerRepository) {
-        Optional<Customer> optional = customerRepository.findByMobileNumberAndActiveSw(command.getMobileNumber(), CustomerConstants.ACTIVE_SW);
-        if (optional.isPresent())
-            throw new CustomerAlreadyExistsException("Customer is exist with given mobile number : " + command.getMobileNumber());
+        // validation logic will come from customer command interceptor
+//        Optional<Customer> optional = customerRepository.findByMobileNumberAndActiveSw(command.getMobileNumber(), CustomerConstants.ACTIVE_SW);
+//        if (optional.isPresent())
+//            throw new CustomerAlreadyExistsException("Customer is exist with given mobile number : " + command.getMobileNumber());
 
         CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent();
         BeanUtils.copyProperties(command, customerCreatedEvent);
@@ -54,7 +58,8 @@ public class CustomerAggregate {
     }
 
     @CommandHandler
-    public void handle(UpdateCustomerCommand command, CustomerRepository customerRepository) {
+    public void handle(UpdateCustomerCommand command, EventStore eventStore) {
+        List<?> events = eventStore.readEvents(command.getCustomerId()).asStream().toList();
         CustomerUpdatedEvent customerUpdatedEvent = new CustomerUpdatedEvent();
         BeanUtils.copyProperties(command, customerUpdatedEvent);
         AggregateLifecycle.apply(customerUpdatedEvent);
@@ -68,9 +73,9 @@ public class CustomerAggregate {
 
     @CommandHandler
     public void handle(DeleteCustomerCommand command, CustomerRepository customerRepository) {
-        CustomerUpdatedEvent customerUpdatedEvent = new CustomerUpdatedEvent();
-        BeanUtils.copyProperties(command, customerUpdatedEvent);
-        AggregateLifecycle.apply(customerUpdatedEvent);
+        CustomerDeletedEvent customerDeletedEvent = new CustomerDeletedEvent();
+        BeanUtils.copyProperties(command, customerDeletedEvent);
+        AggregateLifecycle.apply(customerDeletedEvent);
     }
 
     @EventSourcingHandler

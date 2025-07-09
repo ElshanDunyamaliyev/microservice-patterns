@@ -2,7 +2,6 @@ package com.eazybytes.customer.query.controller;
 
 import com.eazybytes.customer.dto.CustomerDto;
 import com.eazybytes.customer.query.FindCustomerQuery;
-import com.eazybytes.customer.service.ICustomerService;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryGateway;

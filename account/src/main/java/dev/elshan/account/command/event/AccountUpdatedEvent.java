@@ -1,9 +1,10 @@
-package dev.elshan.account.dto;
+package dev.elshan.account.command.event;
 
 import lombok.Data;
+import lombok.Value;
 
 @Data
-public class AccountsDto {
+public class AccountUpdatedEvent {
     private String name;
     private String email;
     private String mobileNumber;

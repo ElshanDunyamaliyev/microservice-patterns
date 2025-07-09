@@ -51,3 +51,7 @@ info:
     name: "accounts"
     description: "Bank account ms"
     version: "1.0.0"
+
+axon:
+  axonserver:
+    servers: localhost:8124
