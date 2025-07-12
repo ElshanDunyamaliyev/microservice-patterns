@@ -59,4 +59,8 @@ public class CustomerServiceImpl implements ICustomerService {
         return true;
     }
 
+    public void updateMobilNumber(String mobileNumber){
+
+    }
+
 }

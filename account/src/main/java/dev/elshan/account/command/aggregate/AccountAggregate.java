@@ -6,6 +6,7 @@ import dev.elshan.account.command.UpdateAccountCommand;
 import dev.elshan.account.command.event.AccountCreatedEvent;
 import dev.elshan.account.command.event.AccountDeletedEvent;
 import dev.elshan.account.command.event.AccountUpdatedEvent;
+import dev.elshan.common.AccountDataChangedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -32,6 +33,9 @@ public class AccountAggregate {
         AccountCreatedEvent accountCreatedEvent = new AccountCreatedEvent();
         BeanUtils.copyProperties(command, accountCreatedEvent);
         AggregateLifecycle.apply(accountCreatedEvent);
+        AccountDataChangedEvent accountDataChangedEvent = new AccountDataChangedEvent();
+        BeanUtils.copyProperties(command, accountDataChangedEvent);
+        AggregateLifecycle.apply(accountDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -48,7 +52,10 @@ public class AccountAggregate {
     public void update(UpdateAccountCommand command) {
         AccountUpdatedEvent accountUpdatedEvent = new AccountUpdatedEvent();
         BeanUtils.copyProperties(command, accountUpdatedEvent);
+        AccountDataChangedEvent accountDataChangedEvent = new AccountDataChangedEvent();
+        BeanUtils.copyProperties(command, accountDataChangedEvent);
         AggregateLifecycle.apply(accountUpdatedEvent);
+        AggregateLifecycle.apply(accountDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -66,6 +73,9 @@ public class AccountAggregate {
         AccountDeletedEvent accountDeletedEvent = new AccountDeletedEvent();
         BeanUtils.copyProperties(command, accountDeletedEvent);
         AggregateLifecycle.apply(accountDeletedEvent);
+        AccountDataChangedEvent accountDataChangedEvent = new AccountDataChangedEvent();
+        BeanUtils.copyProperties(command, accountDataChangedEvent);
+        AggregateLifecycle.apply(accountDataChangedEvent);
     }
 
     @EventSourcingHandler

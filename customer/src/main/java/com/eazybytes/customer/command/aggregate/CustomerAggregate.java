@@ -6,23 +6,21 @@ import com.eazybytes.customer.command.UpdateCustomerCommand;
 import com.eazybytes.customer.command.event.CustomerCreatedEvent;
 import com.eazybytes.customer.command.event.CustomerDeletedEvent;
 import com.eazybytes.customer.command.event.CustomerUpdatedEvent;
-import com.eazybytes.customer.constants.CustomerConstants;
-import com.eazybytes.customer.entity.Customer;
-import com.eazybytes.customer.exception.CustomerAlreadyExistsException;
 import com.eazybytes.customer.repository.CustomerRepository;
-import com.fasterxml.jackson.databind.util.BeanUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventhandling.DomainEventMessage;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
+import dev.elshan.common.CustomerDataChangedEvent;
+
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Aggregate
 public class CustomerAggregate {
 
@@ -45,7 +43,12 @@ public class CustomerAggregate {
 
         CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent();
         BeanUtils.copyProperties(command, customerCreatedEvent);
+        log.info("{}",customerCreatedEvent);
         AggregateLifecycle.apply(customerCreatedEvent);
+        CustomerDataChangedEvent customerDataChangedEvent = new CustomerDataChangedEvent();
+        BeanUtils.copyProperties(command, customerDataChangedEvent);
+        log.info("{}",customerDataChangedEvent);
+        AggregateLifecycle.apply(customerDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -63,6 +66,9 @@ public class CustomerAggregate {
         CustomerUpdatedEvent customerUpdatedEvent = new CustomerUpdatedEvent();
         BeanUtils.copyProperties(command, customerUpdatedEvent);
         AggregateLifecycle.apply(customerUpdatedEvent);
+        CustomerDataChangedEvent customerDataChangedEvent = new CustomerDataChangedEvent();
+        BeanUtils.copyProperties(command, customerDataChangedEvent);
+        AggregateLifecycle.apply(customerDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -76,6 +82,9 @@ public class CustomerAggregate {
         CustomerDeletedEvent customerDeletedEvent = new CustomerDeletedEvent();
         BeanUtils.copyProperties(command, customerDeletedEvent);
         AggregateLifecycle.apply(customerDeletedEvent);
+        CustomerDataChangedEvent customerDataChangedEvent = new CustomerDataChangedEvent();
+        BeanUtils.copyProperties(command, customerDataChangedEvent);
+        AggregateLifecycle.apply(customerDataChangedEvent);
     }
 
     @EventSourcingHandler

@@ -20,11 +20,11 @@ public class CardsDto {
     )
     private String mobileNumber;
 
-    @NotEmpty(message = "Card Number can not be a null or empty")
-    @Pattern(regexp="(^$|[0-9]{12})",message = "CardNumber must be 12 digits")
-    @Schema(
-            description = "Card Number of the customer", example = "100646930341"
-    )
+//    @NotEmpty(message = "Card Number can not be a null or empty")
+//    @Pattern(regexp="(^$|[0-9]{12})",message = "CardNumber must be 12 digits")
+//    @Schema(
+//            description = "Card Number of the customer", example = "100646930341"
+//    )
     private String cardNumber;
 
     @NotEmpty(message = "CardType can not be a null or empty")
